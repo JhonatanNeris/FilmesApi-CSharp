@@ -28,17 +28,17 @@ public class CinemaController : ControllerBase
         Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
         _context.Cinemas.Add(cinema);
         _context.SaveChanges();
-        return CreatedAtAction(nameof(RecuperaCinemasPorId), new { Id = cinema.Id }, cinemaDto);
+        return CreatedAtAction(nameof(GetCinemasById), new { Id = cinema.Id }, cinemaDto);
     }
 
     [HttpGet]
-    public IEnumerable<ReadCinemaDto> RecuperaCinemas()
+    public IEnumerable<ReadCinemaDto> GetCinemas()
     {
         return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
     }
 
     [HttpGet("{id}")]
-    public IActionResult RecuperaCinemasPorId(int id)
+    public IActionResult GetCinemasById(int id)
     {
         Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
         if (cinema != null)
@@ -50,7 +50,7 @@ public class CinemaController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult AtualizaCinema(int id, [FromBody] UpdateCinemaDto cinemaDto)
+    public IActionResult UpdateCinema(int id, [FromBody] UpdateCinemaDto cinemaDto)
     {
         Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
         if (cinema == null)
@@ -64,7 +64,7 @@ public class CinemaController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public IActionResult DeletaCinema(int id)
+    public IActionResult DeleteCinema(int id)
     {
         Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
         if (cinema == null)
