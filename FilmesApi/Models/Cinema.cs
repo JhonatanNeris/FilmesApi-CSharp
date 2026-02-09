@@ -8,7 +8,8 @@ namespace FilmesApi.Models
         [Required]
         public int Id { get; set; } 
         [Required(ErrorMessage = "O nome do cinema é obrigatório!")]
-        public string Name { get; set; }       
-
+        public string Name { get; set; }
+        public int AddressId { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

@@ -6,5 +6,7 @@ namespace FilmesApi.Data.Dtos
     {
         [Required(ErrorMessage = "O nome do cinema é obrigatório!")]
         public string Name { get; set; }
+        public int AddressId { get; set; }
+
     }
 }
