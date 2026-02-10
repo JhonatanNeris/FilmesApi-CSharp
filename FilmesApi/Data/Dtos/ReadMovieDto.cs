@@ -7,4 +7,5 @@ public class ReadMovieDto
     public string Genre { get; set; }
     public int DurationInMinutes { get; set; }
     public DateTime AppointmentTime { get; set; } = DateTime.Now;
+    public ICollection<ReadSessionDto> Sessions { get; set; }
 }
