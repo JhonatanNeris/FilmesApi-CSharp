@@ -4,6 +4,7 @@ using FilmesApi.Data.Dtos;
 using FilmesApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesApi.Controllers;
 
@@ -32,9 +33,13 @@ public class CinemaController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<ReadCinemaDto> GetCinemas()
+    public IEnumerable<ReadCinemaDto> GetCinemas([FromQuery] int? addressId = null)
     {
-        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+        if (addressId == null)
+        {
+            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.ToList());
+        }
+        return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.FromSqlRaw($"SELECT * FROM cinemas WHERE cinemas.addressId = {addressId} ").ToList());
     }
 
     [HttpGet("{id}")]
