@@ -11,8 +11,8 @@ namespace FilmesApi.Controllers;
 [Route("[controller]")]
 public class MovieController : ControllerBase
 {
-   
-    private MovieContext _context;  
+
+    private MovieContext _context;
     private IMapper _mapper;
 
     public MovieController(MovieContext context, IMapper mapper)
@@ -33,16 +33,21 @@ public class MovieController : ControllerBase
     {
         Movie movie = _mapper.Map<Movie>(movieDto);
 
-        _context.Movies.Add(movie); 
+        _context.Movies.Add(movie);
         _context.SaveChanges();
 
         return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
     }
 
     [HttpGet]
-    public IEnumerable<ReadMovieDto> GetMovies([FromQuery]int skip = 0, int take = 50)
+    public IEnumerable<ReadMovieDto> GetMovies([FromQuery] int skip = 0, int take = 50, string? cinemaName = null)
     {
-        return _mapper.Map<List<ReadMovieDto>>(_context.Movies.Skip(skip).Take(take).ToList());
+        if (cinemaName == null)
+        {
+            return _mapper.Map<List<ReadMovieDto>>(_context.Movies.Skip(skip).Take(take).ToList());
+        }
+
+        return _mapper.Map<List<ReadMovieDto>>(_context.Movies.Where(movie => movie.Sessions.Any(session => session.Cinema.Name == cinemaName)).Skip(skip).Take(take).ToList());
     }
 
     [HttpGet("{id}")]
@@ -94,7 +99,7 @@ public class MovieController : ControllerBase
             filme => filme.Id == id);
         if (filme == null) return NotFound();
 
-        _context.Remove(filme);        
+        _context.Remove(filme);
         _context.SaveChanges();
         return NoContent();
     }
